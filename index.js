@@ -23,6 +23,16 @@ io.on("connection", (socket) => {
         console.log("player.room:", player.room)
         callback([player])
     })
+
+    socket.on("player-hand", ({playerId, hand}) =>{
+        io.to(playerId).emit("hand", {hand})
+    })
+
+    socket.on("start-game", ({room}) => {
+        console.log("in start game room = ", {room})
+        io.to(room).emit("handle-start-game", ({hello: "hello"}))
+    })
+
     socket.on("disconnect", () => {
         console.log("Player has left.")
         const player = removePlayer(socket.id)
