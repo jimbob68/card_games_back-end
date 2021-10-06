@@ -49,10 +49,10 @@ io.on("connection", (socket) => {
         io.to(room).emit("set-card-pot", {pot})
     })
 
-    socket.on("update-predictions", ({trickPrediction, predictionPlayer, room}) => {
+    socket.on("update-predictions", ({trickPrediction, nextPredictionPlayer, room}) => {
         console.log("trick prediction:", trickPrediction)
-        console.log("prediction player:", predictionPlayer)
-        io.to(room).emit("set-prediction", {newPrediction: trickPrediction, nextPlayer: predictionPlayer + 1})
+        console.log("prediction player:", nextPredictionPlayer)
+        io.to(room).emit("set-prediction", {newPrediction: trickPrediction, nextPredictionPlayer})
     })
 })
 
