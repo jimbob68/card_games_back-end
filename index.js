@@ -48,6 +48,12 @@ io.on("connection", (socket) => {
     socket.on("update-card-pot", ({pot, room}) => {
         io.to(room).emit("set-card-pot", {pot})
     })
+
+    socket.on("update-predictions", ({trickPrediction, predictionPlayer, room}) => {
+        console.log("trick prediction:", trickPrediction)
+        console.log("prediction player:", predictionPlayer)
+        io.to(room).emit("set-prediction", {newPrediction: trickPrediction, nextPlayer: predictionPlayer + 1})
+    })
 })
 
 
