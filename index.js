@@ -40,6 +40,14 @@ io.on("connection", (socket) => {
             io.to(player.room).emit("players-list", {playersList: getPlayersInRoom(player.room)})
         }
     })
+
+    socket.on("get-next-player", ({activePlayer, room}) => {
+        io.to(room).emit("set-next-player", ({nextPlayer: activePlayer}))
+    })
+
+    socket.on("update-card-pot", ({pot, room}) => {
+        io.to(room).emit("set-card-pot", {pot})
+    })
 })
 
 
