@@ -14,13 +14,23 @@ app.use(cors())
 
 io.on("connection", (socket) => {
     console.log("new connection:", socket.id)
-    socket.on("join-room", ({ name, room }, callback) => {
-        const {player, error} = addPlayer({id: socket.id, name, room})
-        if(error)return callback(error)
-        socket.join(player.room)
-        io.to(player.room).emit("players-list", {playersList: getPlayersInRoom(player.room)})
-        console.log("getPlayersInRoom:", getPlayersInRoom(player.room))
-        console.log("player.room:", player.room)
+    socket.on("join-room", ({ name, room, isComputer, computerId }, callback) => {
+        let player
+        let error 
+        let playerErrorObject = {player, error}
+        
+        if(isComputer) {
+            playerErrorObject = addPlayer({id: computerId, name, room, isComputer})
+        } else {
+            playerErrorObject = addPlayer({id: socket.id, name, room, isComputer: false})
+            if(error)return callback(error)
+                socket.join(playerErrorObject.player.room)
+        }
+        
+        
+        io.to(playerErrorObject.player.room).emit("players-list", {playersList: getPlayersInRoom(playerErrorObject.player.room)})
+        console.log("getPlayersInRoom:", getPlayersInRoom(playerErrorObject.player.room))
+        console.log("player.room:", playerErrorObject.player.room)
         callback([player])
     })
 
@@ -37,6 +47,15 @@ io.on("connection", (socket) => {
         console.log("Player has left.")
         const player = removePlayer(socket.id)
         if(player){
+            
+            const humanPlayers = getPlayersInRoom(player.room).filter(player => {
+                return player.isComputer === false 
+            })
+            if(humanPlayers.length === 0){
+                getPlayersInRoom(player.room).forEach(player => {
+                    removePlayer(player.id)
+                })
+            }
             io.to(player.room).emit("players-list", {playersList: getPlayersInRoom(player.room)})
         }
     })
