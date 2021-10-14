@@ -1,5 +1,5 @@
 const players = []
-const addPlayer = ({ id, name, room }) => {
+const addPlayer = ({ id, name, room, isComputer }) => {
     name = name.toLowerCase()
     room = room.toLowerCase()
     const existingPlayer = players.find(player => player.name === name && player.room === room)
@@ -7,7 +7,7 @@ const addPlayer = ({ id, name, room }) => {
     if(existingPlayer){
         return {error: "User name is taken"}
     }
-    const player = {id, name, room}
+    const player = {id, name, room, isComputer}
     players.push(player)
 
     return {player}
