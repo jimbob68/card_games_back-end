@@ -60,8 +60,9 @@ io.on("connection", (socket) => {
         }
     })
 
-    socket.on("get-next-player", ({activePlayer, room, firstPlayer}) => {
-        io.to(room).emit("set-next-player", ({nextPlayer: activePlayer, firstPlayer}))
+    socket.on("get-next-player", ({activePlayer, room, firstPlayer, predictionPlayer}) => {
+        console.log("ACTIVE PLAYER", activePlayer)
+        io.to(room).emit("set-next-player", ({nextPlayer: activePlayer, firstPlayer, currentPredictionPlayer: predictionPlayer}))
     })
 
     socket.on("update-card-pot", ({pot, room}) => {
