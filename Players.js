@@ -18,10 +18,10 @@ const addPlayer = ({ id, name, room, isComputer }) => {
 
 const removePlayer = (id) => {
     const index = players.findIndex(player => player.id === id)
-        if(index !== -1){
-            return players.splice(index, 1)[0]
-        }
-        }
+    if(index !== -1){
+        return players.splice(index, 1)[0]
+    }
+}
 
 const getPlayersInRoom = (room) => {
     return players.filter(player => player.room === room)

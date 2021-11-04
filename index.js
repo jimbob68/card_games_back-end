@@ -20,14 +20,19 @@ io.on("connection", (socket) => {
         let playerErrorObject = {player, error}
         
         if(isComputer) {
+            let playersInRoom = getPlayersInRoom(room)
+            playersInRoom.forEach(player => {
+                if(player.id === computerId){
+                    computerId += 10
+                }
+            })
             playerErrorObject = addPlayer({id: computerId, name, room, isComputer})
         } else {
             playerErrorObject = addPlayer({id: socket.id, name, room, isComputer: false})
             if(playerErrorObject.error)return callback(playerErrorObject.error)
                 socket.join(playerErrorObject.player.room)
         }
-
-        
+        console.log("playerErrorObject", playerErrorObject)
         
         io.to(playerErrorObject.player.room).emit("players-list", {playersList: getPlayersInRoom(playerErrorObject.player.room)})
         console.log("getPlayersInRoom:", getPlayersInRoom(playerErrorObject.player.room))
