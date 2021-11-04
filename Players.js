@@ -3,7 +3,10 @@ const addPlayer = ({ id, name, room, isComputer }) => {
     name = name.toLowerCase()
     room = room.toLowerCase()
     const existingPlayer = players.find(player => player.name === name && player.room === room)
-
+    const existingPlayerId = players.find(player => player.id === id && player.room === room)
+    if(existingPlayerId){
+        return {error: "Id already exists!"}
+    }
     if(existingPlayer){
         return {error: "User name is taken"}
     }

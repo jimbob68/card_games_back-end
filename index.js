@@ -23,9 +23,10 @@ io.on("connection", (socket) => {
             playerErrorObject = addPlayer({id: computerId, name, room, isComputer})
         } else {
             playerErrorObject = addPlayer({id: socket.id, name, room, isComputer: false})
-            if(error)return callback(error)
+            if(playerErrorObject.error)return callback(playerErrorObject.error)
                 socket.join(playerErrorObject.player.room)
         }
+
         
         
         io.to(playerErrorObject.player.room).emit("players-list", {playersList: getPlayersInRoom(playerErrorObject.player.room)})
