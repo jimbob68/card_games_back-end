@@ -4,7 +4,8 @@ const cors = require('cors')
 const http = require('http')
 const PORT = process.env.PORT || 5000
 const router = require("./router")
-const {addPlayer, getPlayersInRoom, removePlayer} = require("./Players.js")
+const {addPlayer, getPlayersInRoom, removePlayer, getAllplayers} = require("./Players.js")
+const {addGameStates, getGameStatesInRoom, getNewestGameStateForRoom} = require("./GameStates.js")
 
 const app = express()
 const server = http.createServer(app)
@@ -62,7 +63,7 @@ io.on("connection", (socket) => {
                     removePlayer(player.id)
                 })
             }
-            io.to(player.room).emit("players-list", {playersList: getPlayersInRoom(player.room)})
+            // io.to(player.room).emit("players-list", {playersList: getPlayersInRoom(player.room)})
         }
     })
 
@@ -79,6 +80,26 @@ io.on("connection", (socket) => {
         console.log("trick prediction:", trickPrediction)
         console.log("prediction player:", nextPredictionPlayer)
         io.to(room).emit("set-prediction", {newPrediction: trickPrediction, nextPredictionPlayer})
+    })
+
+    socket.on("log-players", () => {
+        console.log("all players", getAllplayers())
+    })
+
+    socket.on("send-game-state", ( gameState, callback ) => {
+        console.log(gameState)
+        addGameStates(gameState)
+    
+        let realPlayers = 0
+        getPlayersInRoom(gameState.room).forEach(player => {
+            if(player.isComputer === false){
+                realPlayers += 1
+            }
+        })
+        
+        if(getGameStatesInRoom(gameState.room).length === realPlayers){
+            console.log("newest game state", getNewestGameStateForRoom(gameState.room))
+        }
     })
 })
 

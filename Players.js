@@ -27,4 +27,8 @@ const getPlayersInRoom = (room) => {
     return players.filter(player => player.room === room)
 }
 
-module.exports = {addPlayer, getPlayersInRoom, removePlayer}
+const getAllplayers = () => {
+    return players
+}
+ 
+module.exports = {addPlayer, getPlayersInRoom, removePlayer, getAllplayers}
