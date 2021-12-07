@@ -27,10 +27,11 @@ io.on("connection", (socket) => {
                 }
             })
             playerErrorObject = addPlayer({id: computerId, name, room, isComputer})
+            if(playerErrorObject.error)return callback(playerErrorObject.error)
         } else {
             playerErrorObject = addPlayer({id: socket.id, name, room, isComputer: false})
             if(playerErrorObject.error)return callback(playerErrorObject.error)
-                socket.join(playerErrorObject.player.room)
+            socket.join(playerErrorObject.player.room)
         }
         console.log("playerErrorObject", playerErrorObject)
         
@@ -40,8 +41,11 @@ io.on("connection", (socket) => {
         callback([player])
     })
 
-    socket.on("player-hand", ({playerId, hand}) =>{
-        io.to(playerId).emit("hand", {hand})
+    // socket.on("player-hand", ({playerId, hand}) =>{
+    //     io.to(playerId).emit("hand", {hand})
+    // })
+    socket.on("player-hand", ({name, hand, room}) =>{
+        io.to(room).emit("hand", {hand, handName: name})
     })
 
     socket.on("start-game", ({room}) => {
